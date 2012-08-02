@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="paypal_user_email" />
+	<string name="paypal_item_name" />
+	<string name="paypal_currency_code" />
+	<string name="google_play_dev_public_key" />
+
+	<string-array name="google_play_catalog"></string-array>
+
+</resources>

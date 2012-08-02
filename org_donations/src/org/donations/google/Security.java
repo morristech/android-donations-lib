@@ -16,17 +16,6 @@
 
 package org.donations.google;
 
-import org.donations.DonationsConfiguration;
-import org.donations.google.Consts.PurchaseState;
-import org.donations.google.util.Base64;
-import org.donations.google.util.Base64DecoderException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.text.TextUtils;
-import android.util.Log;
-
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +27,18 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import org.donations.R;
+import org.donations.google.Consts.PurchaseState;
+import org.donations.google.util.Base64;
+import org.donations.google.util.Base64DecoderException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Security-related methods. For a secure implementation, all of this code should be implemented on
@@ -112,7 +113,7 @@ public class Security {
      * @param signature
      *            the signature for the data, signed with the private key
      */
-    public static ArrayList<VerifiedPurchase> verifyPurchase(String signedData, String signature) {
+    public static ArrayList<VerifiedPurchase> verifyPurchase(Context context, String signedData, String signature) {
         if (signedData == null) {
             Log.e(TAG, "data is null");
             return null;
@@ -134,7 +135,7 @@ public class Security {
              * Generally, encryption keys / passwords should only be kept in memory long enough to
              * perform the operation they need to perform.
              */
-            String base64EncodedPublicKey = DonationsConfiguration.GOOGLE_PUBLIC_KEY;
+            String base64EncodedPublicKey = context.getString(R.string.google_play_dev_public_key);
             PublicKey key = Security.generatePublicKey(base64EncodedPublicKey);
             verified = Security.verify(key, signedData, signature);
             if (!verified) {

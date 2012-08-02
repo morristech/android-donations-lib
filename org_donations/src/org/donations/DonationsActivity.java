@@ -19,7 +19,6 @@ package org.donations;
 import org.donations.google.BillingService;
 import org.donations.google.BillingService.RequestPurchase;
 import org.donations.google.BillingService.RestoreTransactions;
-import org.donations.google.Consts;
 import org.donations.google.Consts.PurchaseState;
 import org.donations.google.Consts.ResponseCode;
 import org.donations.google.PurchaseObserver;
@@ -49,7 +48,7 @@ public class DonationsActivity extends Activity {
 	private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 1;
 
 	/** An array of product list entries for the products that can be purchased. */
-	private static final String[] CATALOG = DonationsConfiguration.GOOGLE_CATALOG;
+	private String[] mGooglePlayCatalog;
 
 	private static final String[] CATALOG_DEBUG = new String[] {
 			"android.test.purchased", "android.test.canceled",
@@ -66,7 +65,9 @@ public class DonationsActivity extends Activity {
 
 		@Override
 		public void onBillingSupported(boolean supported) {
-			Log.d(DonationsConfiguration.TAG, "supported: " + supported);
+			if (BuildConfig.DEBUG) {
+				Log.d(DonationsConfiguration.TAG, "supported: " + supported);
+			}
 			if (!supported) {
 				showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
 			}
@@ -76,19 +77,25 @@ public class DonationsActivity extends Activity {
 		public void onPurchaseStateChange(PurchaseState purchaseState,
 				String itemId, final String orderId, long purchaseTime,
 				String developerPayload) {
-			Log.d(DonationsConfiguration.TAG,
-					"onPurchaseStateChange() itemId: " + itemId + " "
-							+ purchaseState);
+			if (BuildConfig.DEBUG) {
+				Log.d(DonationsConfiguration.TAG,
+						"onPurchaseStateChange() itemId: " + itemId + " "
+								+ purchaseState);
+			}
 		}
 
 		@Override
 		public void onRequestPurchaseResponse(RequestPurchase request,
 				ResponseCode responseCode) {
-			Log.d(DonationsConfiguration.TAG, request.mProductId + ": "
-					+ responseCode);
+			if (BuildConfig.DEBUG) {
+				Log.d(DonationsConfiguration.TAG, request.mProductId + ": "
+						+ responseCode);
+			}
 			if (responseCode == ResponseCode.RESULT_OK) {
-				Log.d(DonationsConfiguration.TAG,
-						"purchase was successfully sent to server");
+				if (BuildConfig.DEBUG) {
+					Log.d(DonationsConfiguration.TAG,
+							"purchase was successfully sent to server");
+				}
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						DonationsActivity.this);
 				dialog.setIcon(android.R.drawable.ic_dialog_info);
@@ -101,12 +108,14 @@ public class DonationsActivity extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								dialog.dismiss();
+								finish();
 							}
 						});
 				dialog.show();
-			} else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
+			} else if (BuildConfig.DEBUG
+					&& responseCode == ResponseCode.RESULT_USER_CANCELED) {
 				Log.d(DonationsConfiguration.TAG, "user canceled purchase");
-			} else {
+			} else if (BuildConfig.DEBUG) {
 				Log.d(DonationsConfiguration.TAG, "purchase failed");
 			}
 		}
@@ -114,12 +123,14 @@ public class DonationsActivity extends Activity {
 		@Override
 		public void onRestoreTransactionsResponse(RestoreTransactions request,
 				ResponseCode responseCode) {
-			if (responseCode == ResponseCode.RESULT_OK) {
-				Log.d(DonationsConfiguration.TAG,
-						"completed RestoreTransactions request");
-			} else {
-				Log.d(DonationsConfiguration.TAG, "RestoreTransactions error: "
-						+ responseCode);
+			if (BuildConfig.DEBUG) {
+				if (responseCode == ResponseCode.RESULT_OK) {
+					Log.d(DonationsConfiguration.TAG,
+							"completed RestoreTransactions request");
+				} else {
+					Log.d(DonationsConfiguration.TAG,
+							"RestoreTransactions error: " + responseCode);
+				}
 			}
 		}
 	}
@@ -132,6 +143,9 @@ public class DonationsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.donations__activity);
+
+		mGooglePlayCatalog = getResources().getStringArray(
+				R.array.google_play_catalog);
 
 		// choose donation amount
 		mGoogleAndroidMarketSpinner = (Spinner) findViewById(R.id.donations__google_android_market_spinner);
@@ -158,8 +172,8 @@ public class DonationsActivity extends Activity {
 		index = mGoogleAndroidMarketSpinner.getSelectedItemPosition();
 		Log.d(DonationsConfiguration.TAG, "selected item in spinner: " + index);
 
-		if (!Consts.DEBUG) {
-			if (!mBillingService.requestPurchase(CATALOG[index], null)) {
+		if (!DonationsConfiguration.DEBUG) {
+			if (!mBillingService.requestPurchase(mGooglePlayCatalog[index], null)) {
 				showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
 			}
 		} else {
@@ -184,16 +198,16 @@ public class DonationsActivity extends Activity {
 				.path("cgi-bin/webscr");
 		uriBuilder.appendQueryParameter("cmd", "_donations");
 		uriBuilder.appendQueryParameter("business",
-				DonationsConfiguration.PAYPAL_USER);
+				getString(R.string.paypal_user_email));
 		uriBuilder.appendQueryParameter("lc", "US");
 		uriBuilder.appendQueryParameter("item_name",
-				DonationsConfiguration.PAYPAL_ITEM_NAME);
+				getString(R.string.paypal_item_name));
 		uriBuilder.appendQueryParameter("no_note", "1");
 		// uriBuilder.appendQueryParameter("no_note", "0");
 		// uriBuilder.appendQueryParameter("cn", "Note to the developer");
 		uriBuilder.appendQueryParameter("no_shipping", "1");
 		uriBuilder.appendQueryParameter("currency_code",
-				DonationsConfiguration.PAYPAL_CURRENCY_CODE);
+				getString(R.string.paypal_currency_code));
 		// uriBuilder.appendQueryParameter("bn",
 		// "PP-DonationsBF:btn_donate_LG.gif:NonHosted");
 		Uri payPalUri = uriBuilder.build();
