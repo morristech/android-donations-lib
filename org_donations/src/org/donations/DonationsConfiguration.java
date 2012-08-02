@@ -18,29 +18,23 @@ package org.donations;
 
 public class DonationsConfiguration {
 
-    public static final String TAG = "Donations";
+	public static final String TAG = "Donations";
 
-    public static final boolean DEBUG = false;
+	public static final boolean DEBUG = false;
 
-    /** Flattr */
+	/** PayPal */
 
-    public static final String FLATTR_PROJECT_URL = "http://code.google.com/p/ad-away/";
-    // without http:// !
-    public static final String FLATTR_URL = "flattr.com/thing/369138/AdAway-Ad-blocker-for-Android";
+	public static final String PAYPAL_USER = "chris@senab.co.uk";
+	public static final String PAYPAL_ITEM_NAME = "photup Donation";
+	public static final String PAYPAL_CURRENCY_CODE = "GBP";
 
-    /** PayPal */
+	/** Google Play Store In-App Billing */
 
-    public static final String PAYPAL_USER = "dominik@dominikschuermann.de";
-    public static final String PAYPAL_ITEM_NAME = "AdAway Donation";
-    public static final String PAYPAL_CURRENCY_CODE = "EUR";
+	// your public key from the google play publisher account
+	public static final String GOOGLE_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjvKTS4cvWomWPyUU8SHCG58w3YsYbi5LkJyt92UrwxArABGNw1VKPoxDd4usDipExdrwmtiLcslqacc/OAqyuna/ug7Jikk+pL+DJBw3D1kctMjeZmuETUWA32ak3k0Kc5RIFjcKQ6Moi05texXbVgey3rv7NjZIwqAsHnTQDBRPd7XefqrTuKW7mZ6LQmz7BZhsjxR2TltFa7/xNVLlDtEz+DF3BtLCnA/Dl6J4PKCkNA3AufZ39rOJZ9hR6HNx+p+1g2b/QSrev0aXwey9x7WW/amXrXxc/ZsQtC03Ca/OjmfjNLZiGnHRY1UTdpqY+WXAh2lmVZM06mcTMVErZwIDAQAB";
 
-    /** Google Play Store In-App Billing */
-
-    // your public key from the google play publisher account
-    public static final String GOOGLE_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg8bTVFK5zIg4FGYkHKKQ/j/iGZQlXU0qkAv2BA6epOX1ihbMz78iD4SmViJlECHN8bKMHxouRNd9pkmQKxwEBHg5/xDC/PHmSCXFx/gcY/xa4etA1CSfXjcsS9i94n+j0gGYUg69rNkp+p/09nO9sgfRTAQppTxtgKaXwpfKe1A8oqmDUfOnPzsEAG6ogQL6Svo6ynYLVKIvRPPhXkq+fp6sJ5YVT5Hr356yCXlM++G56Pk8Z+tPzNjjvGSSs/MsYtgFaqhPCsnKhb55xHkc8GJ9haq8k3PSqwMSeJHnGiDq5lzdmsjdmGkWdQq2jIhKlhMZMm5VQWn0T59+xjjIIwIDAQAB";
-    // mapping from the possible donations of 1,2,3,5,8 and 13 eur to your in-app items defined in
-    // the publisher account of google play
-    public static final String[] GOOGLE_CATALOG = new String[] { "adaway.donation.1",
-            "adaway.donation.2", "adaway.donation.3", "adaway.donation.5", "adaway.donation.8",
-            "adaway.donation.13" };
+	public static final String[] GOOGLE_CATALOG = new String[] {
+			"photup.donation.0", "photup.donation.1", "photup.donation.2",
+			"photup.donation.3", "photup.donation.5", "photup.donation.8",
+			"photup.donation.10" };
 }
